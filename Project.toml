@@ -1,0 +1,14 @@
+name = "EnsembleInference"
+uuid = "38c88aaf-29c5-5a6d-98b3-aebc65a264d1"
+authors = ["Seth Axen <seth.axen@gmail.com>"]
+
+[deps]
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
+
+[compat]
+julia = "^1"
