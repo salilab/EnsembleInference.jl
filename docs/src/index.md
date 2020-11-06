@@ -1,3 +1,12 @@
+```@meta
+CurrentModule = EnsembleInference
+```
+
 # EnsembleInference
 
-*Documentation goes here.*
+```@index
+```
+
+```@autodocs
+Modules = [EnsembleInference]
+```

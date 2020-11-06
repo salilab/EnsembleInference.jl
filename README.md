@@ -1,9 +1,6 @@
 # EnsembleInference
 
-![Lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg)<!--
-![Lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)
-![Lifecycle](https://img.shields.io/badge/lifecycle-stable-green.svg)
-![Lifecycle](https://img.shields.io/badge/lifecycle-retired-orange.svg)
-![Lifecycle](https://img.shields.io/badge/lifecycle-archived-red.svg)
-![Lifecycle](https://img.shields.io/badge/lifecycle-dormant-blue.svg) -->
-[![Build Status](https://travis-ci.com/salilab/EnsembleInference.jl.svg?branch=master)](https://travis-ci.com/salilab/EnsembleInference.jl)
+[![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://salilab.github.io/EnsembleInference.jl/stable)
+[![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://salilab.github.io/EnsembleInference.jl/dev)
+[![Build Status](https://github.com/salilab/EnsembleInference.jl/workflows/CI/badge.svg)](https://github.com/salilab/EnsembleInference.jl/actions)
+[![Coverage](https://codecov.io/gh/salilab/EnsembleInference.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/salilab/EnsembleInference.jl)

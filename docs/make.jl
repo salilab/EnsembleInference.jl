@@ -1,13 +1,21 @@
-using Documenter, EnsembleInference
+using EnsembleInference
+using Documenter
 
-makedocs(
-    modules = [EnsembleInference],
-    format = :html,
-    checkdocs = :exports,
-    sitename = "EnsembleInference.jl",
-    pages = Any["index.md"]
+makedocs(;
+    modules=[EnsembleInference],
+    authors="Seth Axen <seth.axen@gmail.com> and contributors",
+    repo="https://github.com/salilab/EnsembleInference.jl/blob/{commit}{path}#L{line}",
+    sitename="EnsembleInference.jl",
+    format=Documenter.HTML(;
+        prettyurls=get(ENV, "CI", "false") == "true",
+        canonical="https://salilab.github.io/EnsembleInference.jl",
+        assets=String[],
+    ),
+    pages=[
+        "Home" => "index.md",
+    ],
 )
 
-deploydocs(
-    repo = "github.com/sdaxen/EnsembleInference.jl.git",
+deploydocs(;
+    repo="github.com/salilab/EnsembleInference.jl",
 )
