@@ -1,5 +1,8 @@
 module EnsembleInference
 
-# Write your package code here.
+using Distributions: Distributions
+using Manifolds: Manifolds, SpecialEuclidean, SpecialOrthogonal, TranslationGroup
+using Random
+using Statistics: Statistics
 
-end
+end # module
