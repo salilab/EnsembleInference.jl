@@ -11,22 +11,6 @@ using Distributions, LinearAlgebra, Manifolds, Statistics, StatsBase, Test
         @test d.manifold === M
     end
 
-    @testset "logpdf" begin
-        p = randn(3)
-        d = DiracDistribution(M, p)
-        @inferred logpdf(d, p)
-        @test iszero(logpdf(d, p))
-        @test logpdf(d, randn(3)) == -Inf
-
-        M2 = Euclidean(3; field = ℂ)
-        p2 = randn(ComplexF64, 3)
-        d2 = DiracDistribution(M2, p2)
-        @inferred logpdf(d2, p2)
-        @test iszero(logpdf(d2, p2))
-        @test isreal(logpdf(d2, p2))
-        @test logpdf(d2, randn(ComplexF64, 3)) == -Inf
-    end
-
     @testset "eltype" begin
         p = randn(3)
         d = DiracDistribution(M, p)

@@ -13,14 +13,6 @@ struct DiracDistribution{P,M<:Manifolds.Manifold} <: Manifolds.MPointDistributio
     point::P
 end
 
-function Distributions.logpdf(d::DiracDistribution, p)
-    T = real(Base.promote_eltype(
-        Manifolds.number_eltype(p),
-        Manifolds.number_eltype(d.point),
-    ))
-    return Distributions.insupport(d, p) ? zero(T) : T(-Inf)
-end
-
 Base.eltype(::Type{<:DiracDistribution{T}}) where {T} = T
 
 function Base.rand(::AbstractRNG, s::Random.SamplerTrivial{<:DiracDistribution})
