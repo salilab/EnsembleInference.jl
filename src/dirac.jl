@@ -18,7 +18,7 @@ function Distributions.logpdf(d::DiracDistribution, p)
         Manifolds.number_eltype(p),
         Manifolds.number_eltype(d.point),
     ))
-    return Distributions.insupport(d.manifold, p) ? zero(T) : T(-Inf)
+    return Distributions.insupport(d, p) ? zero(T) : T(-Inf)
 end
 
 Base.eltype(::Type{<:DiracDistribution{T}}) where {T} = T
@@ -50,8 +50,10 @@ end
 
 Statistics.mean(d::DiracDistribution) = d.point
 
-Statistics.median(d::DiracDistribution) = mean(d)
+Statistics.median(d::DiracDistribution) = Statistics.mean(d)
+
+Statistics.std(d::DiracDistribution) = zero(real(Manifolds.number_eltype(d.point)))
 
 Statistics.var(d::DiracDistribution) = zero(real(Manifolds.number_eltype(d.point)))
 
-Distributions.mode(d::DiracDistribution) = mean(d)
+Distributions.mode(d::DiracDistribution) = Statistics.mean(d)

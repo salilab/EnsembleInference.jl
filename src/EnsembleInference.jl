@@ -4,6 +4,7 @@ using Distributions: Distributions
 using Manifolds: Manifolds, SpecialEuclidean, SpecialOrthogonal, TranslationGroup
 using Random
 using Statistics: Statistics
+using StatsBase: StatsBase
 
 const SHAPESPEC_SE3 = Manifolds.ShapeSpecification(
     Manifolds.StaticReshaper(),
