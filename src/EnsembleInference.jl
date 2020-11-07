@@ -15,7 +15,7 @@ se3_array(x) = Manifolds.ProductArray(SHAPESPEC_SE3, x)
 
 include("dirac.jl")
 
-export DiracDistribution
+export Dirac
 export se3_array
 
 end # module
