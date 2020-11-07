@@ -1,4 +1,4 @@
-using Distributions, LinearAlgebra, Manifolds, Statistics, StatsBase, Test
+using Distributions, LinearAlgebra, Manifolds, Random, Statistics, StatsBase, Test
 
 @testset "Dirac" begin
     M = Euclidean(3)
@@ -15,6 +15,14 @@ using Distributions, LinearAlgebra, Manifolds, Statistics, StatsBase, Test
         p = randn(3)
         d = Dirac(M, p)
         @test eltype(d) === typeof(p)
+    end
+
+    @testset "rand!" begin
+        p = randn(3)
+        q = Vector{Float64}(undef, 3)
+        d = Dirac(M, p)
+        @test rand!(d, q) === q
+        @test q == p
     end
 
     @testset "rand" begin

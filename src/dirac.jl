@@ -20,6 +20,8 @@ function Base.rand(::AbstractRNG, s::Random.SamplerTrivial{<:Dirac})
     return copy(d.point)
 end
 
+Distributions._rand!(::AbstractRNG, d::Dirac, q) = copyto!(q, d.point)
+
 function Distributions.convolve(
     d1::D1,
     d2::D1,
