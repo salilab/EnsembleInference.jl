@@ -37,6 +37,12 @@ using Distributions, LinearAlgebra, Manifolds, Statistics, StatsBase, Test
         p = randn(3)
         d = DiracDistribution(M, p)
         @test rand(d) == p
+
+        ps = rand(d, 2)
+        @test typeof(ps) == Vector{typeof(p)}
+        @test length(ps) == 2
+        @test ps[1] == p
+        @test ps[2] == p
     end
 
     @testset "insupport" begin
