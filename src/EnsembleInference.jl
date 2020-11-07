@@ -12,6 +12,9 @@ const SHAPESPEC_SE3 = Manifolds.ShapeSpecification(
 
 se3_array(x) = Manifolds.ProductArray(SHAPESPEC_SE3, x)
 
+include("dirac.jl")
+
+export DiracDistribution
 export se3_array
 
 end # module
