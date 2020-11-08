@@ -26,8 +26,9 @@ se3_array(x) = Manifolds.ProductArray(SHAPESPEC_SE3, x)
 include("utility.jl")
 include("dirac.jl")
 include("haar.jl")
+include("diffusion_normal.jl")
 
-export Dirac, Haar
+export DiffusionNormal, Dirac, Haar
 export inversion, se3_array
 
 end # module
