@@ -51,7 +51,7 @@ using Distributions, LinearAlgebra, Manifolds, Random, Statistics, StatsBase, Te
 
     @testset "rand! SpecialOrthogonal" begin
         M = SpecialOrthogonal(3)
-        p = group_exp(M, hat(M, diagm(ones(3)), randn(3)))
+        p = group_exp(M, hat(M, Matrix(Diagonal(ones(3))), randn(3)))
         q = Matrix{Float64}(undef, 3, 3)
         d = Haar(M, p)
         @test rand!(d, q) === q
@@ -59,7 +59,7 @@ using Distributions, LinearAlgebra, Manifolds, Random, Statistics, StatsBase, Te
     end
 
     @testset "rand SpecialOrthogonal" begin
-        p = group_exp(M, hat(M, diagm(ones(3)), randn(3)))
+        p = group_exp(M, hat(M, Matrix(Diagonal(ones(3))), randn(3)))
         d = Haar(M, p)
         @inferred rand(d)
         q = rand(d)
