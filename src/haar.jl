@@ -37,6 +37,8 @@ end
 
 Distributions.insupport(d::Haar, p) = Manifolds.is_manifold_point(d.manifold, p)
 
+inversion(d::Haar) = d
+
 ## random rotation matrices
 
 function Distributions._rand!(

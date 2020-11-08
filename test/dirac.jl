@@ -74,4 +74,10 @@ using Distributions, LinearAlgebra, Manifolds, Random, Statistics, StatsBase, Te
         @test d12 isa typeof(d1)
         @test isapprox(G, d12.point, compose(G, p1, p2))
     end
+
+    @testset "inversion" begin
+        p = randn(3)
+        d = Dirac(M, p)
+        @test inversion(d) === d
+    end
 end

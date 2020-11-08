@@ -45,3 +45,5 @@ Statistics.std(d::Dirac) = zero(real(Manifolds.number_eltype(d.point)))
 Statistics.var(d::Dirac) = zero(real(Manifolds.number_eltype(d.point)))
 
 Distributions.mode(d::Dirac) = Statistics.mean(d)
+
+inversion(d::Dirac) = d

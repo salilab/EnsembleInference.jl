@@ -43,6 +43,12 @@ using Distributions, LinearAlgebra, Manifolds, Random, Statistics, StatsBase, Te
         @test isapprox(G, d12.point, compose(G, p1, p2))
     end
 
+    @testset "inversion" begin
+        p = randn(3)
+        d = Haar(M, p)
+        @test inversion(d) === d
+    end
+
     @testset "rand! SpecialOrthogonal" begin
         M = SpecialOrthogonal(3)
         p = group_exp(M, hat(M, diagm(ones(3)), randn(3)))
