@@ -13,15 +13,15 @@ using Distributions, LinearAlgebra, Manifolds, PDMats, Random, Statistics, Stats
         @test isapprox(M, d.e, identity(M, μ))
         @test d.direction === Manifolds.LeftAction()
 
-        Σ = rand()*I
+        Σ = rand() * I
         @inferred DiffusionNormal(M, μ, Σ)
-        d = DiffusionNormal(M, μ, Σ; direction = Manifolds.RightAction())
+        d = DiffusionNormal(M, μ, Σ; direction=Manifolds.RightAction())
         @test d.Σ isa PDMats.ScalMat
         @test d.direction === Manifolds.RightAction()
 
         Σ = Diagonal(rand(3))
         @inferred DiffusionNormal(M, μ, Σ)
-        d = DiffusionNormal(M, μ, Σ; e = Matrix{Float32}(Matrix(Diagonal(ones(3)))))
+        d = DiffusionNormal(M, μ, Σ; e=Matrix{Float32}(Matrix(Diagonal(ones(3)))))
         @test d.Σ isa PDMats.PDiagMat
         @test d.e isa Matrix{Float32}
     end

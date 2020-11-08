@@ -11,11 +11,7 @@ makedocs(;
         canonical="https://salilab.github.io/EnsembleInference.jl",
         assets=String[],
     ),
-    pages=[
-        "Home" => "index.md",
-    ],
+    pages=["Home" => "index.md"],
 )
 
-deploydocs(;
-    repo="github.com/salilab/EnsembleInference.jl",
-)
+deploydocs(; repo="github.com/salilab/EnsembleInference.jl")

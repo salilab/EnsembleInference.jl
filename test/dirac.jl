@@ -57,7 +57,7 @@ using Distributions, LinearAlgebra, Manifolds, Random, Statistics, StatsBase, Te
         @test isreal(f(d))
         @test iszero(f(d))
 
-        M2 = Euclidean(3; field = ℂ)
+        M2 = Euclidean(3; field=ℂ)
         p2 = randn(ComplexF64, 3)
         d2 = Dirac(M2, p2)
         @inferred f(d2)

@@ -23,8 +23,7 @@ end
 Distributions._rand!(::AbstractRNG, d::Dirac, q) = copyto!(q, d.point)
 
 function Distributions.convolve(
-    d1::D1,
-    d2::D1,
+    d1::D1, d2::D1
 ) where {P1,P2,G<:Manifolds.AbstractGroupManifold,D1<:Dirac{P1,G},D2<:Dirac{P2,G}}
     M = d1.manifold
     p = Manifolds.compose(M, d1.point, d2.point)

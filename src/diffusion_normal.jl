@@ -30,19 +30,9 @@ struct DiffusionNormal{Tμ,TΣ,Te,TB,TD,TM<:Manifolds.AbstractGroupManifold} <:
     function DiffusionNormal(M, μ, Σ, e, basis, direction)
         pdΣ = _pdmat(M, Σ)
         return new{
-            typeof(μ),
-            typeof(pdΣ),
-            typeof(e),
-            typeof(basis),
-            typeof(direction),
-            typeof(M),
+            typeof(μ),typeof(pdΣ),typeof(e),typeof(basis),typeof(direction),typeof(M)
         }(
-            M,
-            μ,
-            pdΣ,
-            e,
-            basis,
-            direction,
+            M, μ, pdΣ, e, basis, direction
         )
     end
 end
@@ -51,17 +41,19 @@ function DiffusionNormal(
     M,
     μ,
     Σ;
-    e = identity(M, μ),
-    basis = Manifolds.DefaultOrthogonalBasis(),
-    direction = Manifolds.LeftAction(),
+    e=identity(M, μ),
+    basis=Manifolds.DefaultOrthogonalBasis(),
+    direction=Manifolds.LeftAction(),
 )
     return DiffusionNormal(M, μ, Σ, e, basis, direction)
 end
 
-const SO3DiffusionNormal{Tμ,TΣ,Te,TB,TD} =
-    DiffusionNormal{Tμ,TΣ,Te,TB,TD,SpecialOrthogonal{3}}
-const SE3DiffusionNormal{Tμ,TΣ,Te,TB,TD} =
-    DiffusionNormal{Tμ,TΣ,Te,TB,TD,SpecialEuclidean{3}}
+const SO3DiffusionNormal{Tμ,TΣ,Te,TB,TD} = DiffusionNormal{
+    Tμ,TΣ,Te,TB,TD,SpecialOrthogonal{3}
+}
+const SE3DiffusionNormal{Tμ,TΣ,Te,TB,TD} = DiffusionNormal{
+    Tμ,TΣ,Te,TB,TD,SpecialEuclidean{3}
+}
 
 Base.eltype(::Type{<:DiffusionNormal{Tμ,TΣ,Te}}) where {Tμ,TΣ,Te} = Te
 
@@ -89,7 +81,7 @@ function Distributions._rand!(rng::AbstractRNG, d::DiffusionNormal, q)
     Xᵛ = rand(rng, dliealg)
     X = Manifolds.get_vector(M, e, Xᵛ, B)
     p = Manifolds.group_exp!(M, q, X)
-    for i = 1:n-1
+    for i in 1:(n - 1)
         rand!(rng, dliealg, Xᵛ)
         Manifolds.get_vector!(M, X, e, Xᵛ, B)
         Manifolds.group_exp!(M, p, X)

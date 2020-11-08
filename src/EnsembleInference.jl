@@ -9,8 +9,7 @@ using Statistics: Statistics
 using StatsBase: StatsBase
 
 const SHAPESPEC_SE3 = Manifolds.ShapeSpecification(
-    Manifolds.StaticReshaper(),
-    Manifolds.base_manifold(SpecialEuclidean(3)).manifolds...,
+    Manifolds.StaticReshaper(), Manifolds.base_manifold(SpecialEuclidean(3)).manifolds...
 )
 
 """
