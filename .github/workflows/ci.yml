@@ -4,6 +4,8 @@ on:
     branches: [master]
     tags: [v*]
   pull_request:
+  schedule:
+    - cron: "0 0 * * *"
 
 jobs:
   test:
@@ -14,14 +16,19 @@ jobs:
       matrix:
         version:
           - '1.0'
-          - '1.5'
+          - '1'
           - 'nightly'
         os:
           - ubuntu-latest
           - macOS-latest
           - windows-latest
         arch:
+          - x86
           - x64
+        # 32-bit Julia binaries are not available on macOS
+        exclude:
+          - os: macOS-latest
+            arch: x86
     steps:
       - uses: actions/checkout@v2
       - uses: julia-actions/setup-julia@v1
