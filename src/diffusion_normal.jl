@@ -87,11 +87,7 @@ function Distributions._rand!(rng::AbstractRNG, d::DiffusionNormal, q)
         Manifolds.group_exp!(M, p, X)
         Manifolds.compose!(M, q, q, p)
     end
-    if d.direction isa Manifolds.LeftAction
-        Manifolds.compose!(M, q, d.μ, q)
-    else
-        Manifolds.compose!(M, q, q, d.μ)
-    end
+    Manifolds.translate!(M, q, d.μ, q, d.direction)
     return q
 end
 
