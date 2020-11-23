@@ -46,8 +46,9 @@ function Distributions._rand!(
     @assert n == N
     randn!(rng, q)
     F = qr(q)
-    q .= F.Q .* sign.(diag(F.R)')
-    if det(q) < 0 # q is orthogonal but not special; swap first two columns make it special
+    idx = diagind(N, N)
+    q .= F.Q .* sign.(getindex.(Ref(F.R), idx'))
+    if det(q) < 0 # q is orthogonal but not special; swap first two columns to make it special
         for i in 1:N
             @inbounds q[i, 1], q[i, 2] = q[i, 2], q[i, 1]
         end
