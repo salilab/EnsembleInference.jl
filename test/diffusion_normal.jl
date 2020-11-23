@@ -71,4 +71,23 @@ using Distributions, LinearAlgebra, Manifolds, PDMats, Random, Statistics, Stats
         @test is_manifold_point(M, ps[1], true)
         @test is_manifold_point(M, ps[2], true)
     end
+
+    @testset "insupport" begin
+        μ = group_exp(M, hat(M, Matrix(Diagonal(ones(3))), randn(3)))
+        Σ = exp(Symmetric(randn(3, 3)))
+        d = DiffusionNormal(M, μ, Σ)
+        p = group_exp(M, hat(M, Matrix(Diagonal(ones(3))), randn(3)))
+        @test insupport(d, p)
+        @test !insupport(d, randn(3))
+        @test !insupport(d, randn(4, 4))
+        @test !insupport(d, zeros(3, 3))
+        @test !insupport(d, Matrix(Diagonal([-1.0, 1.0, 1.0])))
+    end
+
+    @testset "mode" begin
+        μ = group_exp(M, hat(M, Matrix(Diagonal(ones(3))), randn(3)))
+        Σ = exp(Symmetric(randn(3, 3)))
+        d = DiffusionNormal(M, μ, Σ)
+        @test mode(d) == μ
+    end
 end
