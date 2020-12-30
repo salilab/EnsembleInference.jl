@@ -30,7 +30,7 @@ include("dirac.jl")
 include("haar.jl")
 include("diffusion_normal.jl")
 
-export DiffusionNormal, Dirac, Haar
+export DiffusionNormal, DiracDelta, Haar
 export inversion, se3_array
 
 end # module
