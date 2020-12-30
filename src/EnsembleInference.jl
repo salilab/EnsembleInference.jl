@@ -1,9 +1,11 @@
 module EnsembleInference
 
+using ChainRulesCore: ChainRulesCore, NO_FIELDS, @thunk
 using Distributions: Distributions
 using LinearAlgebra
 using Manifolds: Manifolds, SpecialEuclidean, SpecialOrthogonal, TranslationGroup
 using PDMats: PDMats
+using OrdinaryDiffEq: OrdinaryDiffEq
 using Random
 using Statistics: Statistics
 using StatsBase: StatsBase
@@ -23,6 +25,7 @@ inversion
 se3_array(x) = Manifolds.ProductArray(SHAPESPEC_SE3, x)
 
 include("utility.jl")
+include("expv.jl")
 include("dirac.jl")
 include("haar.jl")
 include("diffusion_normal.jl")
