@@ -14,8 +14,8 @@ function expv(
     t,
     A,
     b;
-    solver = OrdinaryDiffEq.Tsit5(),
-    solve_kwargs::NamedTuple = (; abstol=1e-8, reltol=1e-8),
+    solver=OrdinaryDiffEq.Tsit5(),
+    solve_kwargs::NamedTuple=(; abstol=1e-8, reltol=1e-8),
 )
     A isa AbstractMatrix && isdiag(A) && return expv(t, Diagonal(A), b)
     # include time as parameter, which allows us to handle t::Complex
@@ -30,13 +30,7 @@ function expv(
 end
 expv(t, A::Diagonal, b; kwargs...) = exp.(t .* A.diag) .* b
 
-function ChainRulesCore.rrule(
-    ::typeof(expv),
-    t,
-    A,
-    b;
-    kwargs...,
-)
+function ChainRulesCore.rrule(::typeof(expv), t, A, b; kwargs...)
     w = expv(t, A, b; kwargs...)
     function expv_pullback(Δw)
         ∂t = @thunk expv_rev_t(t, A, w, Δw)
@@ -55,12 +49,7 @@ expv_rev_t(::Real, A, w, Δw) = real(dot(Δw, A, w))
 expv_rev_b(t, A, w, Δw; kwargs...) = expv(conj(t), A', Δw; kwargs...)
 
 function expv_rev_A(
-    t,
-    A,
-    w,
-    Δw;
-    solver = OrdinaryDiffEq.Tsit5(),
-    solve_kwargs = (; abstol=1e-8, reltol=1e-8),
+    t, A, w, Δw; solver=OrdinaryDiffEq.Tsit5(), solve_kwargs=(; abstol=1e-8, reltol=1e-8)
 )
     ∂A = similar(A)
     if isdiag(A)
@@ -74,7 +63,7 @@ function expv_rev_A(
     u0 = Matrix{Base.promote_eltypeof(w, Δw, A)}(undef, n, n + 2)
     u0[:, 1] .= w
     u0[:, 2] .= Δw
-    fill!(@view(u0[:, 3:n+2]), false)
+    fill!(@view(u0[:, 3:(n + 2)]), false)
     solve_kwargs = merge(solve_kwargs, (; save_everystep=false))
     # include time as parameter, which allows us to handle t::Complex
     Tt = real(typeof(t))
@@ -82,19 +71,21 @@ function expv_rev_A(
     params = (A, n, t)
     problem = OrdinaryDiffEq.ODEProblem(f_expv_rev_A!, u0, tspan, params)
     u1 = last(OrdinaryDiffEq.solve(problem, solver; solve_kwargs...))
-    ∂A .= conj(t) .* @view(u1[:, 3:n+2])
+    ∂A .= conj(t) .* @view(u1[:, 3:(n + 2)])
     return ∂A
 end
-expv_rev_A(t, A::Diagonal, w, Δw; kwargs...) = outer_sparse!(similar(A), Δw, w, conj(t), false)
+function expv_rev_A(t, A::Diagonal, w, Δw; kwargs...)
+    return outer_sparse!(similar(A), Δw, w, conj(t), false)
+end
 
 f_expv!(du, u, (A, c), t) = mul!(du, A, u, c, false)
 
 function f_expv_rev_A!(du, u, (A, n, c), t)
     z, a = @views u[:, 1], u[:, 2]
-    dz, da, dμ = @views du[:, 1], du[:, 2], du[:, 3:n+2]
+    dz, da, dμ = @views du[:, 1], du[:, 2], du[:, 3:(n + 2)]
     mul!(dz, A, z, c, false)
     mul!(da, A', a, -conj(c), false)
-    outer_sparse!(dμ, a, z, -1, false)
+    return outer_sparse!(dμ, a, z, -1, false)
 end
 
 # in-place outer product Z = x α y' + Z β, for vectors x,y and scalars α,β,

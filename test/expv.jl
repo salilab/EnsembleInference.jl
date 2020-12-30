@@ -20,7 +20,9 @@ using ChainRulesTestUtils: rand_tangent
             Δw = rand_tangent(w)
             rrule_test(EnsembleInference.expv, Δw, (t, ∂t), (A, ∂A), (b, ∂b))
             if TA <: Complex
-                rrule_test(EnsembleInference.expv, Δw, (real(t), real(∂t)), (A, ∂A), (b, ∂b))
+                rrule_test(
+                    EnsembleInference.expv, Δw, (real(t), real(∂t)), (A, ∂A), (b, ∂b)
+                )
             end
             # check type-stable
             _, back = @inferred rrule(EnsembleInference.expv, t, A, b)
