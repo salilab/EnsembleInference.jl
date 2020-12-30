@@ -51,11 +51,6 @@ expv_rev_b(t, A, w, Δw; kwargs...) = expv(conj(t), A', Δw; kwargs...)
 function expv_rev_A(
     t, A, w, Δw; solver=OrdinaryDiffEq.Tsit5(), solve_kwargs=(; abstol=1e-9, reltol=1e-9)
 )
-    ∂A = similar(A)
-    if isdiag(A)
-        copyto!(∂A, expv_rev_A(t, Diagonal(A), w, Δw))
-        return ∂A
-    end
     # solve system backwards, augmented to evolve adjoints to parameters
     # based on Algorithm 1 of https://arxiv.org/abs/1806.07366, though the approach
     # is older
@@ -71,6 +66,7 @@ function expv_rev_A(
     params = (A, n, t)
     problem = OrdinaryDiffEq.ODEProblem(f_expv_rev_A!, u0, tspan, params)
     u1 = last(OrdinaryDiffEq.solve(problem, solver; solve_kwargs...))
+    ∂A = similar(A)
     ∂A .= conj(t) .* @view(u1[:, 3:(n + 2)])
     return ∂A
 end
