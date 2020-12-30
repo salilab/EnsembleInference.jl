@@ -15,7 +15,7 @@ function expv(
     A,
     b;
     solver=OrdinaryDiffEq.Tsit5(),
-    solve_kwargs::NamedTuple=(; abstol=1e-8, reltol=1e-8),
+    solve_kwargs::NamedTuple=(; abstol=1e-9, reltol=1e-9),
 )
     A isa AbstractMatrix && isdiag(A) && return expv(t, Diagonal(A), b)
     # include time as parameter, which allows us to handle t::Complex
@@ -49,7 +49,7 @@ expv_rev_t(::Real, A, w, Δw) = real(dot(Δw, A, w))
 expv_rev_b(t, A, w, Δw; kwargs...) = expv(conj(t), A', Δw; kwargs...)
 
 function expv_rev_A(
-    t, A, w, Δw; solver=OrdinaryDiffEq.Tsit5(), solve_kwargs=(; abstol=1e-8, reltol=1e-8)
+    t, A, w, Δw; solver=OrdinaryDiffEq.Tsit5(), solve_kwargs=(; abstol=1e-9, reltol=1e-9)
 )
     ∂A = similar(A)
     if isdiag(A)
