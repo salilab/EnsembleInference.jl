@@ -20,10 +20,7 @@ jobs:
           - 'nightly'
         os:
           - ubuntu-latest
-          - macOS-latest
-          - windows-latest
         arch:
-          - x86
           - x64
         # 32-bit Julia binaries are not available on macOS
         exclude:
