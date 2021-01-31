@@ -6,4 +6,5 @@ using Test
     include("dirac.jl")
     include("haar.jl")
     include("diffusion_normal.jl")
+    include("representation.jl")
 end
