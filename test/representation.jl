@@ -6,7 +6,7 @@ using Rotations
 
 isskewhermitian(A) = ishermitian(im * A)
 
-isunitary(A) = A * A' ≈ I && ab abs(det(A)) ≈ 1
+isunitary(A) = A * A' ≈ I && abs(det(A)) ≈ 1
 
 # explicit little-d matrix entries, from Tables 4.3-4.6 of
 # Varshalovich. Quantum Theory of Angular Momentum. 1998.
