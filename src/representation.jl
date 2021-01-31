@@ -7,7 +7,7 @@
 # Chirikjian, G. S. Stochastic Models, Information Theory, and Lie Groups, Volume 2. 2012.
 # ISBN: 978-0-8176-4943-2. doi: 10.1007/978-0-8176-4944-9.
 
-cln(ℓ, n) = abs(n) ≤ ℓ ? sqrt((ℓ - n) * (ℓ + n + 1)) : zero(float(Base.promote_typeof(ℓ, n)))
+cln(ℓ, n) = ℓ ≥ n ? sqrt((ℓ - n) * (ℓ + n + 1)) : zero(float(Base.promote_typeof(ℓ, n)))
 
 # TODO: refactor to be in terms of diagonals so we can avoid kronecker delta entirely
 
