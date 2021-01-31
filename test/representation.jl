@@ -33,9 +33,8 @@ function dmat(β, ℓ)
             √3*sinα^2*cosα sinα*(3sinα^2 - 2) cosα*(3cosα^2 - 2) √3*sinα*cosα^2
             -sinα^3 √3*sinα^2*cosα -√3*sinα*cosα^2 cosα^3
         ]
-        # elseif ℓ == 2
     else
-        throw(DomainError(ℓ, "ℓ must be less than or equal to 2"))
+        throw(DomainError(ℓ, "ℓ must be less than or equal to 3/2"))
     end
 end
 
@@ -47,7 +46,7 @@ end
             Xⁱ = Float64.(i .== (1:3))
             Eimat = Manifolds.get_vector(SO3, e, Xⁱ, basis)
             @test @inferred(representation_block(so3, Ei, 0)) ≈ zeros(1, 1)
-            @testset "ℓ=$ℓ" for ℓ in 1:200
+            @testset "ℓ=$ℓ" for ℓ in 1:0.5:100
                 u_Ei = @inferred representation_block(so3, Ei, ℓ)
                 u_Eimat = @inferred representation_block(so3, Eimat, ℓ)
                 @test u_Ei isa Tridiagonal
@@ -58,7 +57,7 @@ end
             end
         end
         @testset "non-basis vector" begin
-            @testset "ℓ=$ℓ" for ℓ in 1:200
+            @testset "ℓ=$ℓ" for ℓ in 1:0.5:100
                 Xⁱ = randn(3)
                 X = Manifolds.get_vector(SO3, e, Xⁱ, basis)
                 u1 = @inferred representation_block(so3, Xⁱ, ℓ)
@@ -78,7 +77,7 @@ end
     @testset "SO(3) representations" begin
         # R = Rotations.UnitQuaternion(normalize(randn(4)))
         @testset "basic group properties" begin
-            @testset for "ℓ=$ℓ" in 0:20
+            @testset for "ℓ=$ℓ" for ℓ in 0:0.5:20
                 R1 = Rotations.UnitQuaternion(normalize(randn(4)))
                 R2 = Rotations.UnitQuaternion(normalize(randn(4)))
                 R12 = R1 * R2
