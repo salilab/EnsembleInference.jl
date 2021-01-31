@@ -20,6 +20,19 @@ end
 const so3 = LieAlgebra(SO3)
 const se3 = LieAlgebra(SE3)
 
+struct BasisVector{B,I}
+    basis::B
+end
+BasisVector(basis, i::Integer) = BasisVector{typeof(basis),i}(basis)
+
+# basis vectors needed for SO(3) (E1-E3) and SE(3) (E1-E6)
+const E1 = BasisVector(Manifolds.DefaultOrthogonalBasis(),1)
+const E2 = BasisVector(Manifolds.DefaultOrthogonalBasis(),2)
+const E3 = BasisVector(Manifolds.DefaultOrthogonalBasis(),3)
+const E4 = BasisVector(Manifolds.DefaultOrthogonalBasis(),4)
+const E5 = BasisVector(Manifolds.DefaultOrthogonalBasis(),5)
+const E6 = BasisVector(Manifolds.DefaultOrthogonalBasis(),6)
+
 const SHAPESPEC_SE3 = Manifolds.ShapeSpecification(
     Manifolds.StaticReshaper(), Manifolds.base_manifold(SpecialEuclidean(3)).manifolds...
 )
