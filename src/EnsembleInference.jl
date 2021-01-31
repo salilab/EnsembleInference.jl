@@ -1,6 +1,5 @@
 module EnsembleInference
 
-using ChainRulesCore: ChainRulesCore, NO_FIELDS, @thunk
 using Distributions: Distributions
 using LinearAlgebra
 using Manifolds: Manifolds, SpecialEuclidean, SpecialOrthogonal, TranslationGroup
