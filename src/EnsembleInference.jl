@@ -51,6 +51,7 @@ include("utility.jl")
 include("dirac.jl")
 include("haar.jl")
 include("diffusion_normal.jl")
+include("representation.jl")
 
 export SO3, so3, SE3, se3
 export DiffusionNormal, DiracDelta, Haar
