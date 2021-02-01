@@ -3,6 +3,8 @@ using EnsembleInference: E1, E2, E3, representation_block
 using LinearAlgebra
 using Manifolds: Manifolds
 using Rotations
+using Serialization
+using Test
 
 isskewhermitian(A) = ishermitian(im * A)
 
