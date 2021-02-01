@@ -3,10 +3,29 @@ using EnsembleInference: E1, E2, E3, representation_block
 using LinearAlgebra
 using Manifolds: Manifolds
 using Rotations
+using Serialization
+using Test
 
 isskewhermitian(A) = ishermitian(im * A)
 
 isunitary(A) = A * A' ≈ I && abs(det(A)) ≈ 1
+
+# generate and sparsify all blocks up to maximum degree L
+generate_blocks(M, p, L) = [representation_block(M, p, ℓ) for ℓ in 0:L]
+
+# test against reference file. if reference file doesn't exist, create it.
+# used to ensure that future optimizations don't break correctness
+function test_reference(fn, A)
+    dir = Base.source_dir()
+    path = abspath(joinpath(dir, fn))
+    dirname, filename = splitdir(path)
+    if !isfile(path)
+        mkpath(dirname)
+        open(io -> serialize(io, A), path, "w")
+    end
+    Aref = open(deserialize, path, "r")
+    @test A ≈ Aref
+end
 
 # explicit little-d matrix entries, from Tables 4.3-4.6 of
 # Varshalovich. Quantum Theory of Angular Momentum. 1998.
@@ -59,6 +78,12 @@ end
                 @test isskewhermitian(u_Eimat)
                 @test representation_block(so3, Ei, ℓ) ≈ representation_block(so3, Eimat, ℓ)
             end
+        end
+        # arrays serialized with v"1.5", deserialization with old Julia versions may fail
+        VERSION ≥ v"1.5.3" && @testset "reference tests" begin
+            test_reference("representations/so3_E1_30.jls", generate_blocks(so3, E1, 30))
+            test_reference("representations/so3_E2_30.jls", generate_blocks(so3, E2, 30))
+            test_reference("representations/so3_E3_30.jls", generate_blocks(so3, E3, 30))
         end
         @testset "non-basis vector" begin
             @testset "ℓ=$ℓ" for ℓ in 1:0.5:100
