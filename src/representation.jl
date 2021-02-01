@@ -7,8 +7,6 @@
 # Chirikjian, G. S. Stochastic Models, Information Theory, and Lie Groups, Volume 2. 2012.
 # ISBN: 978-0-8176-4943-2. doi: 10.1007/978-0-8176-4944-9.
 
-
-
 # diagonals of infinitesimal rotation elements of Varshalovich §4.18.3.
 function representation_diag(::typeof(so3), ::typeof(E1), ℓ, ::Val{i}) where {i}
     ℓ2 = Int(2ℓ)
