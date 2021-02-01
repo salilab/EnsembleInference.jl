@@ -49,7 +49,11 @@ end
             @testset "ℓ=$ℓ" for ℓ in 1:0.5:100
                 u_Ei = @inferred representation_block(so3, Ei, ℓ)
                 u_Eimat = @inferred representation_block(so3, Eimat, ℓ)
-                @test u_Ei isa Tridiagonal
+                if Ei === E3
+                    @test u_Ei isa Diagonal
+                else
+                    @test u_Ei isa Tridiagonal
+                end
                 @test u_Eimat isa Tridiagonal
                 @test isskewhermitian(u_Ei)
                 @test isskewhermitian(u_Eimat)

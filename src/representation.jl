@@ -7,23 +7,28 @@
 # Chirikjian, G. S. Stochastic Models, Information Theory, and Lie Groups, Volume 2. 2012.
 # ISBN: 978-0-8176-4943-2. doi: 10.1007/978-0-8176-4944-9.
 
-cln(ℓ, n) = ℓ ≥ n ? sqrt((ℓ - n) * (ℓ + n + 1)) : zero(float(Base.promote_typeof(ℓ, n)))
 
-# TODO: refactor to be in terms of diagonals so we can avoid kronecker delta entirely
 
-# i.e. infinitesimal rotation elements of Varshalovich §4.18.3.
-function representation_element(::typeof(so3), ::typeof(E1), ℓ, m, n)
-    return im * -(cln(ℓ, -n) * kron_delta(m + 1, n) + cln(ℓ, n) * kron_delta(m - 1, n)) / 2
+# diagonals of infinitesimal rotation elements of Varshalovich §4.18.3.
+function representation_diag(::typeof(so3), ::typeof(E1), ℓ, ::Val{i}) where {i}
+    ℓ2 = Int(2ℓ)
+    absi = abs(i)
+    isone(absi) && return @. im * (-sqrt((ℓ2:-1:1) * (1:ℓ2)) / 2)
+    return zeros(complex(float(eltype(ℓ))), ℓ2 + 1 - absi)
 end
-function representation_element(::typeof(so3), ::typeof(E2), ℓ, m, n)
-    return (cln(ℓ, -n) * kron_delta(m + 1, n) - cln(ℓ, n) * kron_delta(m - 1, n)) / 2
+function representation_diag(::typeof(so3), ::typeof(E2), ℓ, ::Val{i}) where {i}
+    ℓ2 = Int(2ℓ)
+    absi = abs(i)
+    isone(absi) && return @. i * sqrt((ℓ2:-1:1) * (1:ℓ2)) / 2
+    return zeros(float(eltype(ℓ)), ℓ2 + 1 - absi)
 end
-function representation_element(::typeof(so3), ::typeof(E3), ℓ, m, n)
-    return im * float(-n * kron_delta(m, n))
+function representation_diag(::typeof(so3), ::typeof(E3), ℓ, ::Val{i}) where {i}
+    iszero(i) && return Vector(im .* (ℓ:-1:(-ℓ)))
+    return zeros(complex(eltype(ℓ)), Int(2ℓ) + 1 - abs(i))
 end
 
 """
-    representation_block(::typeof(so3), X, ℓ) -> Tridiagonal{Complex}
+    representation_block(::typeof(so3), X, ℓ)
 
 Compute the size `(2ℓ+1, 2ℓ+1)` block ``ℓ`` of the representation of the element ``X`` of
 the element of the Lie algebra ``𝔰𝔬(3)``.
@@ -39,29 +44,27 @@ exponential map on ``\\mathrm{SO}(3)``.
 """
 representation_block(::typeof(so3), X, ℓ)
 
-function representation_block(::typeof(so3), Ei::BasisVector{B,I}, ℓ) where {B,I}
-    T = I == 2 ? float(eltype(ℓ)) : complex(float(eltype(ℓ)))
-    ℓ == 0 && return Tridiagonal(zeros(T, 1, 1))
-    dl = representation_element.(Ref(so3), Ref(Ei), ℓ, (1 - ℓ):ℓ, (-ℓ):(ℓ - 1))
-    d = representation_element.(Ref(so3), Ref(Ei), ℓ, (-ℓ):ℓ, (-ℓ):ℓ)
-    du = .-conj.(dl) # representation is skew-Hermitian
+function representation_block(::typeof(so3), Ei::BasisVector, ℓ)
+    dl = representation_diag(so3, Ei, ℓ, Val(-1))
+    d = representation_diag(so3, Ei, ℓ, Val(0))
+    du = representation_diag(so3, Ei, ℓ, Val(1))
     return Tridiagonal(dl, d, du)
+end
+function representation_block(::typeof(so3), ::typeof(E3), ℓ)
+    return Diagonal(representation_diag(so3, E3, ℓ, Val(0)))
 end
 function representation_block(::typeof(so3), Xⁱ::AbstractVector{<:Real}, ℓ)
     # because representation_element returns a result with real eltype Float64, we use `T`
     # to avoid promoting if the eltype of Xⁱ is lower precision
     T = complex(float(eltype(Xⁱ)))
-    ℓ == 0 && return Tridiagonal(zeros(T, 1, 1))
-    m_dl = (1 - ℓ):ℓ
-    n_dl = (-ℓ):(ℓ - 1)
-    dl = (
-        Xⁱ[1] * T.(representation_element.(Ref(so3), Ref(E1), ℓ, m_dl, n_dl)) .+
-        Xⁱ[2] * T.(representation_element.(Ref(so3), Ref(E2), ℓ, m_dl, n_dl))
+    uE1 = representation_block(so3, E1, ℓ)
+    uE2 = representation_block(so3, E2, ℓ)
+    uE3 = representation_block(so3, E3, ℓ)
+    return Tridiagonal(
+        Xⁱ[1] .* T.(uE1.dl) .+ Xⁱ[2] .* T.(uE2.dl),
+        Xⁱ[3] .* T.(uE3.diag),
+        Xⁱ[1] .* T.(uE1.du) .+ Xⁱ[2] .* T.(uE2.du),
     )
-    m_d = n_d = (-ℓ):ℓ
-    d = Xⁱ[3] .* T.(representation_element.(Ref(so3), Ref(E3), ℓ, m_d, n_d))
-    du = .-conj.(dl) # representation is skew-Hermitian
-    return Tridiagonal(dl, d, du)
 end
 function representation_block(::typeof(so3), X::AbstractMatrix, ℓ)
     # represent the vector X as an actual Vector using the basis
