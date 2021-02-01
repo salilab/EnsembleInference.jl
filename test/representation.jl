@@ -22,7 +22,6 @@ function test_reference(fn, A)
     if !isfile(path)
         mkpath(dirname)
         open(io -> serialize(io, A), path, "w")
-        serialize(open(path, A)
     end
     Aref = open(deserialize, path, "r")
     @test A ≈ Aref
