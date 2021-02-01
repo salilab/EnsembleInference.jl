@@ -80,7 +80,7 @@ end
             end
         end
         # arrays serialized with v"1.5", deserialization with old Julia versions may fail
-        VERSION ≥ v"1.5" && @testset "reference tests" begin
+        VERSION ≥ v"1.5.3" && @testset "reference tests" begin
             test_reference("representations/so3_E1_30.jls", generate_blocks(so3, E1, 30))
             test_reference("representations/so3_E2_30.jls", generate_blocks(so3, E2, 30))
             test_reference("representations/so3_E3_30.jls", generate_blocks(so3, E3, 30))
