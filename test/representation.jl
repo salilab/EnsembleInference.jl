@@ -21,9 +21,10 @@ function test_reference(fn, A)
     dirname, filename = splitdir(path)
     if !isfile(path)
         mkpath(dirname)
-        serialize(path, A)
+        open(io -> serialize(io, A), path, "w")
+        serialize(open(path, A)
     end
-    Aref = deserialize(path)
+    Aref = open(deserialize, path, "r")
     @test A ≈ Aref
 end
 
