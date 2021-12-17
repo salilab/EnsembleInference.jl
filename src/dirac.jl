@@ -8,7 +8,7 @@ point ``p`` on a manifold ``M``.
 
     DiracDelta(M::Manifold, p)
 """
-struct DiracDelta{P,M<:Manifolds.Manifold} <: Manifolds.MPointDistribution{M}
+struct DiracDelta{P,M<:Manifolds.AbstractManifold} <: Manifolds.MPointDistribution{M}
     manifold::M
     point::P
 end
