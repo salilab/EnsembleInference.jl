@@ -57,7 +57,7 @@ const SE3DiffusionNormal{Tμ,TΣ,Te,TB,TD} = DiffusionNormal{
 
 Base.eltype(::Type{<:DiffusionNormal{Tμ,TΣ,Te}}) where {Tμ,TΣ,Te} = Te
 
-Distributions.insupport(d::DiffusionNormal, p) = Manifolds.is_manifold_point(d.manifold, p)
+Distributions.insupport(d::DiffusionNormal, p) = Manifolds.is_point(d.manifold, p)
 
 Distributions.mode(d::DiffusionNormal) = d.μ
 

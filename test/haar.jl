@@ -55,7 +55,7 @@ using Distributions, LinearAlgebra, Manifolds, Random, Statistics, StatsBase, Te
         q = Matrix{Float64}(undef, 3, 3)
         d = Haar(M, p)
         @test rand!(d, q) === q
-        @test is_manifold_point(M, q, true)
+        @test is_point(M, q, true)
     end
 
     @testset "rand SpecialOrthogonal" begin
@@ -63,12 +63,12 @@ using Distributions, LinearAlgebra, Manifolds, Random, Statistics, StatsBase, Te
         d = Haar(M, p)
         @inferred rand(d)
         q = rand(d)
-        @test is_manifold_point(M, q, true)
+        @test is_point(M, q, true)
 
         ps = rand(d, 2)
         @test typeof(ps) == Vector{typeof(p)}
         @test length(ps) == 2
-        @test is_manifold_point(M, ps[1], true)
-        @test is_manifold_point(M, ps[2], true)
+        @test is_point(M, ps[1], true)
+        @test is_point(M, ps[2], true)
     end
 end

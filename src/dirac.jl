@@ -32,7 +32,7 @@ end
 
 function Distributions.insupport(d::DiracDelta, p)
     M = d.manifold
-    return Manifolds.is_manifold_point(M, p) && isapprox(M, p, d.point)
+    return Manifolds.is_point(M, p) && isapprox(M, p, d.point)
 end
 
 Statistics.mean(d::DiracDelta) = d.point
