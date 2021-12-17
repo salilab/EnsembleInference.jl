@@ -8,7 +8,7 @@ point ``p`` on a manifold ``M``.
 
     DiracDelta(M::Manifold, p)
 """
-struct DiracDelta{P,M<:Manifolds.Manifold} <: Manifolds.MPointDistribution{M}
+struct DiracDelta{P,M<:Manifolds.AbstractManifold} <: Manifolds.MPointDistribution{M}
     manifold::M
     point::P
 end
@@ -32,7 +32,7 @@ end
 
 function Distributions.insupport(d::DiracDelta, p)
     M = d.manifold
-    return Manifolds.is_manifold_point(M, p) && isapprox(M, p, d.point)
+    return Manifolds.is_point(M, p) && isapprox(M, p, d.point)
 end
 
 Statistics.mean(d::DiracDelta) = d.point

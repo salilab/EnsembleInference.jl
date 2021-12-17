@@ -53,7 +53,7 @@ using Distributions, LinearAlgebra, Manifolds, PDMats, Random, Statistics, Stats
         q = Matrix{Float64}(undef, 3, 3)
         d = DiffusionNormal(M, μ, Σ)
         @test rand!(d, q) === q
-        @test is_manifold_point(M, q, true)
+        @test is_point(M, q, true)
     end
 
     @testset "rand SpecialOrthogonal" begin
@@ -63,13 +63,13 @@ using Distributions, LinearAlgebra, Manifolds, PDMats, Random, Statistics, Stats
         d = DiffusionNormal(M, μ, Σ)
         @inferred rand(d)
         q = rand(d)
-        @test is_manifold_point(M, q, true)
+        @test is_point(M, q, true)
 
         ps = rand(d, 2)
         @test typeof(ps) == Vector{typeof(μ)}
         @test length(ps) == 2
-        @test is_manifold_point(M, ps[1], true)
-        @test is_manifold_point(M, ps[2], true)
+        @test is_point(M, ps[1], true)
+        @test is_point(M, ps[2], true)
     end
 
     @testset "insupport" begin
