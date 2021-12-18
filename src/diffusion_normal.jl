@@ -90,9 +90,20 @@ function Distributions._rand!(rng::AbstractRNG, d::DiffusionNormal, q)
     Manifolds.translate!(M, q, d.μ, q, d.direction)
     return q
 end
+function Random.rand!(rng::AbstractRNG, qs::AbstractVector, d::DiffusionNormal)
+    if all(i -> isdefined(qs, i), eachindex(qs))
+        for i in eachindex(qs)
+            rand!(rng, d, qs[i])
+        end
+    else
+        for i in eachindex(qs)
+            qs[i] = rand(rng, d)
+        end
+    end
+    return qs
+end
 
-function Base.rand(rng::AbstractRNG, s::Random.SamplerTrivial{<:DiffusionNormal})
-    d = s.self
+function Base.rand(rng::AbstractRNG, d::DiffusionNormal)
     q = Manifolds.allocate_result(d.manifold, rand, d.μ)
     return Random.rand!(rng, d, q)
 end
