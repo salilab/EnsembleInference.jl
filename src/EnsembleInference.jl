@@ -33,10 +33,6 @@ const E4 = BasisVector(Manifolds.DefaultOrthogonalBasis(), 4)
 const E5 = BasisVector(Manifolds.DefaultOrthogonalBasis(), 5)
 const E6 = BasisVector(Manifolds.DefaultOrthogonalBasis(), 6)
 
-const SHAPESPEC_SE3 = Manifolds.ShapeSpecification(
-    Manifolds.StaticReshaper(), Manifolds.base_manifold(SpecialEuclidean(3)).manifolds...
-)
-
 """
     inversion(d::Distribution)
 
@@ -44,8 +40,6 @@ Given a distribution ``d`` of elements ``g ∈ G``, where ``G`` is a group, the 
 ``d`` is the corresponding distribution of ``g^{-1}``.
 """
 inversion
-
-se3_array(x) = Manifolds.ProductArray(SHAPESPEC_SE3, x)
 
 include("utility.jl")
 include("dirac.jl")
@@ -55,6 +49,6 @@ include("representation.jl")
 
 export SO3, so3, SE3, se3
 export DiffusionNormal, DiracDelta, Haar
-export inversion, se3_array
+export inversion
 
 end # module
