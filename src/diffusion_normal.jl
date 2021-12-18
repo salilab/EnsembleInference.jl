@@ -72,19 +72,19 @@ end
 
 function Distributions._rand!(rng::AbstractRNG, d::DiffusionNormal, q)
     # sample using Euler-Maruyama scheme
-    # TODO: use logdetjac of group_exp to tune n so that
+    # TODO: use logdetjac of exp_lie to tune n so that
     n = 100
     M = d.manifold
     B = d.basis
     e = d.e
     dliealg = Distributions.MvNormal(d.Σ / n)
     Xᵛ = rand(rng, dliealg)
-    X = Manifolds.get_vector(M, e, Xᵛ, B)
-    p = Manifolds.group_exp!(M, q, X)
+    X = Manifolds.get_vector_lie(M, Xᵛ, B)
+    p = Manifolds.exp_lie!(M, q, X)
     for i in 1:(n - 1)
         rand!(rng, dliealg, Xᵛ)
-        Manifolds.get_vector!(M, X, e, Xᵛ, B)
-        Manifolds.group_exp!(M, p, X)
+        Manifolds.get_vector_lie!(M, X, Xᵛ, B)
+        Manifolds.exp_lie!(M, p, X)
         Manifolds.compose!(M, q, q, p)
     end
     Manifolds.translate!(M, q, d.μ, q, d.direction)

@@ -67,7 +67,7 @@ using Distributions, LinearAlgebra, Manifolds, Random, Statistics, StatsBase, Te
 
     @testset "convolve" begin
         G = SpecialOrthogonal(3)
-        p1, p2 = ntuple(_ -> group_exp(G, hat(G, Matrix(Diagonal(ones(3))), randn(3))), 2)
+        p1, p2 = ntuple(_ -> exp_lie(G, hat(G, Matrix(Diagonal(ones(3))), randn(3))), 2)
         d1 = DiracDelta(G, p1)
         d2 = DiracDelta(G, p2)
         d12 = convolve(d1, d2)
