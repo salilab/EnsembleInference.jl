@@ -104,11 +104,11 @@ end
     end
 
     @testset "SO(3) representations" begin
-        # R = Rotations.UnitQuaternion(normalize(randn(4)))
+        # R = Rotations.QuatRotation(normalize(randn(4)))
         @testset "basic group properties" begin
             @testset "ℓ=$ℓ" for ℓ in 0:20
-                R1 = Rotations.UnitQuaternion(normalize(randn(4)))
-                R2 = Rotations.UnitQuaternion(normalize(randn(4)))
+                R1 = Rotations.QuatRotation(normalize(randn(4)))
+                R2 = Rotations.QuatRotation(normalize(randn(4)))
                 R12 = R1 * R2
                 # identity
                 Ue = @inferred representation_block(SO3, identity_element(SO3), ℓ)
