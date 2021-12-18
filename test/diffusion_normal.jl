@@ -3,14 +3,14 @@ using Distributions, LinearAlgebra, Manifolds, PDMats, Random, Statistics, Stats
 @testset "DiffusionNormal" begin
     M = SpecialOrthogonal(3)
     @testset "constructors" begin
-        μ = group_exp(M, hat(M, Matrix(Diagonal(ones(3))), randn(3)))
+        μ = exp_lie(M, hat(M, Matrix(Diagonal(ones(3))), randn(3)))
         Σ = exp(Symmetric(randn(3, 3)))
         @inferred DiffusionNormal(M, μ, Σ)
         d = DiffusionNormal(M, μ, Σ)
         @test d isa DiffusionNormal
         @test d.Σ isa PDMats.PDMat
         @test d.μ == μ
-        @test isapprox(M, d.e, identity(M, μ))
+        @test d.e === Identity(M)
         @test d.direction === Manifolds.LeftAction()
 
         Σ = rand() * I
@@ -27,14 +27,14 @@ using Distributions, LinearAlgebra, Manifolds, PDMats, Random, Statistics, Stats
     end
 
     @testset "eltype" begin
-        μ = group_exp(M, hat(M, Matrix(Diagonal(ones(3))), randn(3)))
+        μ = exp_lie(M, hat(M, Matrix(Diagonal(ones(3))), randn(3)))
         Σ = exp(Symmetric(randn(3, 3)))
         d = DiffusionNormal(M, μ, Σ)
         @test eltype(d) === typeof(μ)
     end
 
     @testset "inversion" begin
-        μ = group_exp(M, hat(M, Matrix(Diagonal(ones(3))), randn(3)))
+        μ = exp_lie(M, hat(M, Matrix(Diagonal(ones(3))), randn(3)))
         Σ = exp(Symmetric(randn(3, 3)))
         d = DiffusionNormal(M, μ, Σ)
         dinv = inversion(d)
@@ -47,7 +47,7 @@ using Distributions, LinearAlgebra, Manifolds, PDMats, Random, Statistics, Stats
 
     @testset "rand! SpecialOrthogonal" begin
         M = SpecialOrthogonal(3)
-        μ = group_exp(M, hat(M, Matrix(Diagonal(ones(3))), randn(3)))
+        μ = exp_lie(M, hat(M, Matrix(Diagonal(ones(3))), randn(3)))
         Σ = exp(Symmetric(randn(3, 3)))
         d = DiffusionNormal(M, μ, Σ)
         q = Matrix{Float64}(undef, 3, 3)
@@ -58,7 +58,7 @@ using Distributions, LinearAlgebra, Manifolds, PDMats, Random, Statistics, Stats
 
     @testset "rand SpecialOrthogonal" begin
         M = SpecialOrthogonal(3)
-        μ = group_exp(M, hat(M, Matrix(Diagonal(ones(3))), randn(3)))
+        μ = exp_lie(M, hat(M, Matrix(Diagonal(ones(3))), randn(3)))
         Σ = exp(Symmetric(randn(3, 3)))
         d = DiffusionNormal(M, μ, Σ)
         @inferred rand(d)
@@ -73,10 +73,10 @@ using Distributions, LinearAlgebra, Manifolds, PDMats, Random, Statistics, Stats
     end
 
     @testset "insupport" begin
-        μ = group_exp(M, hat(M, Matrix(Diagonal(ones(3))), randn(3)))
+        μ = exp_lie(M, hat(M, Matrix(Diagonal(ones(3))), randn(3)))
         Σ = exp(Symmetric(randn(3, 3)))
         d = DiffusionNormal(M, μ, Σ)
-        p = group_exp(M, hat(M, Matrix(Diagonal(ones(3))), randn(3)))
+        p = exp_lie(M, hat(M, Matrix(Diagonal(ones(3))), randn(3)))
         @test insupport(d, p)
         @test !insupport(d, randn(3))
         @test !insupport(d, randn(4, 4))
@@ -85,7 +85,7 @@ using Distributions, LinearAlgebra, Manifolds, PDMats, Random, Statistics, Stats
     end
 
     @testset "mode" begin
-        μ = group_exp(M, hat(M, Matrix(Diagonal(ones(3))), randn(3)))
+        μ = exp_lie(M, hat(M, Matrix(Diagonal(ones(3))), randn(3)))
         Σ = exp(Symmetric(randn(3, 3)))
         d = DiffusionNormal(M, μ, Σ)
         @test mode(d) == μ

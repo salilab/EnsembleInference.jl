@@ -66,7 +66,7 @@ function representation_block(::typeof(so3), Xⁱ::AbstractVector{<:Real}, ℓ)
 end
 function representation_block(::typeof(so3), X::AbstractMatrix, ℓ)
     # represent the vector X as an actual Vector using the basis
-    Xⁱ = Manifolds.vee(SO3, Manifolds.Identity(SO3, one(X)), X)
+    Xⁱ = Manifolds.vee(SO3, Manifolds.Identity(SO3), X)
     return representation_block(so3, Xⁱ, ℓ)
 end
 
@@ -103,7 +103,7 @@ julia> EnsembleInference.representation_block(SO3, RotZXZ(0, π/2, 0), 2)
 ```
 """
 function representation_block(::typeof(SO3), p, ℓ)
-    X = Manifolds.group_log(SO3, p)
+    X = Manifolds.log_lie(SO3, p)
     u = representation_block(so3, X, ℓ)
     return exp(Matrix(u))
 end
