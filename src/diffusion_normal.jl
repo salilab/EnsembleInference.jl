@@ -55,7 +55,7 @@ const SE3DiffusionNormal{Tμ,TΣ,Te,TB,TD} = DiffusionNormal{
     Tμ,TΣ,Te,TB,TD,SpecialEuclidean{3}
 }
 
-Base.eltype(::Type{<:DiffusionNormal{Tμ,TΣ,Te}}) where {Tμ,TΣ,Te} = Te
+Base.eltype(::Type{<:DiffusionNormal{Tμ}}) where {Tμ} = Tμ
 
 Distributions.insupport(d::DiffusionNormal, p) = Manifolds.is_point(d.manifold, p)
 
@@ -93,6 +93,6 @@ end
 
 function Base.rand(rng::AbstractRNG, s::Random.SamplerTrivial{<:DiffusionNormal})
     d = s.self
-    q = Manifolds.allocate_result(d.manifold, rand, d.e)
+    q = Manifolds.allocate_result(d.manifold, rand, d.μ)
     return Random.rand!(rng, d, q)
 end
