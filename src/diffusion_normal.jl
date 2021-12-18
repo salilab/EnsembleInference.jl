@@ -8,7 +8,7 @@
         M::Manifolds.AbstractGroupManifold,
         μ,
         Σ,
-        e = Manifolds.identity(M, μ),
+        e = Manifolds.Identity(M),
         basis = Manifolds.DefaultOrthogonalBasis(),
         direction = Manifolds.LeftAction()
     )
@@ -41,7 +41,7 @@ function DiffusionNormal(
     M,
     μ,
     Σ;
-    e=identity(M, μ),
+    e=Manifolds.Identity(M),
     basis=Manifolds.DefaultOrthogonalBasis(),
     direction=Manifolds.LeftAction(),
 )

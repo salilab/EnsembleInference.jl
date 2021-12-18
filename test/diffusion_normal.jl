@@ -10,7 +10,7 @@ using Distributions, LinearAlgebra, Manifolds, PDMats, Random, Statistics, Stats
         @test d isa DiffusionNormal
         @test d.Σ isa PDMats.PDMat
         @test d.μ == μ
-        @test isapprox(M, d.e, identity(M, μ))
+        @test d.e === Identity(M)
         @test d.direction === Manifolds.LeftAction()
 
         Σ = rand() * I
