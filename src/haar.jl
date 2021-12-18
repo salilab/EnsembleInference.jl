@@ -39,7 +39,7 @@ inversion(d::Haar) = d
 
 ## random rotation matrices
 
-function Distributions._rand!(
+function Random.rand!(
     rng::AbstractRNG, ::Haar{P,M}, q::AbstractMatrix
 ) where {P,N,M<:SpecialOrthogonal{N}}
     n = size(q, 1)
@@ -55,11 +55,20 @@ function Distributions._rand!(
     end
     return q
 end
+function Random.rand!(rng::AbstractRNG, qs::AbstractVector{<:AbstractMatrix}, d::Haar)
+    if all(i -> isdefined(qs, i), eachindex(qs))
+        for i in eachindex(qs)
+            rand!(rng, d, qs[i])
+        end
+    else
+        for i in eachindex(qs)
+            qs[i] = rand(rng, d)
+        end
+    end
+    return qs
+end
 
-function Base.rand(
-    rng::AbstractRNG, s::Random.SamplerTrivial{<:Haar{P,M}}
-) where {P,M<:SpecialOrthogonal}
-    d = s.self
+function Base.rand(rng::AbstractRNG, d::Haar{P,M}) where {P,M<:SpecialOrthogonal}
     q = Manifolds.allocate_result(d.manifold, rand, d.point)
     return Random.rand!(rng, d, q)
 end
