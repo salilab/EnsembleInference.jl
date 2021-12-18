@@ -8,7 +8,7 @@
         M::Manifolds.AbstractGroupManifold,
         μ,
         Σ,
-        e = Manifolds.identity(M, μ),
+        e = Manifolds.Identity(M),
         basis = Manifolds.DefaultOrthogonalBasis(),
         direction = Manifolds.LeftAction()
     )
@@ -41,7 +41,7 @@ function DiffusionNormal(
     M,
     μ,
     Σ;
-    e=identity(M, μ),
+    e=Manifolds.Identity(M),
     basis=Manifolds.DefaultOrthogonalBasis(),
     direction=Manifolds.LeftAction(),
 )
@@ -55,9 +55,9 @@ const SE3DiffusionNormal{Tμ,TΣ,Te,TB,TD} = DiffusionNormal{
     Tμ,TΣ,Te,TB,TD,SpecialEuclidean{3}
 }
 
-Base.eltype(::Type{<:DiffusionNormal{Tμ,TΣ,Te}}) where {Tμ,TΣ,Te} = Te
+Base.eltype(::Type{<:DiffusionNormal{Tμ}}) where {Tμ} = Tμ
 
-Distributions.insupport(d::DiffusionNormal, p) = Manifolds.is_manifold_point(d.manifold, p)
+Distributions.insupport(d::DiffusionNormal, p) = Manifolds.is_point(d.manifold, p)
 
 Distributions.mode(d::DiffusionNormal) = d.μ
 
@@ -72,27 +72,38 @@ end
 
 function Distributions._rand!(rng::AbstractRNG, d::DiffusionNormal, q)
     # sample using Euler-Maruyama scheme
-    # TODO: use logdetjac of group_exp to tune n so that
+    # TODO: use logdetjac of exp_lie to tune n so that
     n = 100
     M = d.manifold
     B = d.basis
     e = d.e
     dliealg = Distributions.MvNormal(d.Σ / n)
     Xᵛ = rand(rng, dliealg)
-    X = Manifolds.get_vector(M, e, Xᵛ, B)
-    p = Manifolds.group_exp!(M, q, X)
+    X = Manifolds.get_vector_lie(M, Xᵛ, B)
+    p = Manifolds.exp_lie!(M, q, X)
     for i in 1:(n - 1)
         rand!(rng, dliealg, Xᵛ)
-        Manifolds.get_vector!(M, X, e, Xᵛ, B)
-        Manifolds.group_exp!(M, p, X)
+        Manifolds.get_vector_lie!(M, X, Xᵛ, B)
+        Manifolds.exp_lie!(M, p, X)
         Manifolds.compose!(M, q, q, p)
     end
     Manifolds.translate!(M, q, d.μ, q, d.direction)
     return q
 end
+function Random.rand!(rng::AbstractRNG, qs::AbstractVector, d::DiffusionNormal)
+    if all(i -> isdefined(qs, i), eachindex(qs))
+        for i in eachindex(qs)
+            rand!(rng, d, qs[i])
+        end
+    else
+        for i in eachindex(qs)
+            qs[i] = rand(rng, d)
+        end
+    end
+    return qs
+end
 
-function Base.rand(rng::AbstractRNG, s::Random.SamplerTrivial{<:DiffusionNormal})
-    d = s.self
-    q = Manifolds.allocate_result(d.manifold, rand, d.e)
+function Base.rand(rng::AbstractRNG, d::DiffusionNormal)
+    q = Manifolds.allocate_result(d.manifold, rand, d.μ)
     return Random.rand!(rng, d, q)
 end

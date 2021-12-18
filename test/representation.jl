@@ -111,7 +111,7 @@ end
                 R2 = Rotations.QuatRotation(normalize(randn(4)))
                 R12 = R1 * R2
                 # identity
-                Ue = @inferred representation_block(SO3, Matrix{Float64}(I, 3, 3), ℓ)
+                Ue = @inferred representation_block(SO3, identity_element(SO3), ℓ)
                 @test Ue ≈ I
                 # composition
                 U1 = @inferred representation_block(SO3, R1, ℓ)

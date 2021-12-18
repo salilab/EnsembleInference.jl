@@ -51,24 +51,24 @@ using Distributions, LinearAlgebra, Manifolds, Random, Statistics, StatsBase, Te
 
     @testset "rand! SpecialOrthogonal" begin
         M = SpecialOrthogonal(3)
-        p = group_exp(M, hat(M, Matrix(Diagonal(ones(3))), randn(3)))
+        p = exp_lie(M, hat(M, Matrix(Diagonal(ones(3))), randn(3)))
         q = Matrix{Float64}(undef, 3, 3)
         d = Haar(M, p)
         @test rand!(d, q) === q
-        @test is_manifold_point(M, q, true)
+        @test is_point(M, q, true)
     end
 
     @testset "rand SpecialOrthogonal" begin
-        p = group_exp(M, hat(M, Matrix(Diagonal(ones(3))), randn(3)))
+        p = exp_lie(M, hat(M, Matrix(Diagonal(ones(3))), randn(3)))
         d = Haar(M, p)
         @inferred rand(d)
         q = rand(d)
-        @test is_manifold_point(M, q, true)
+        @test is_point(M, q, true)
 
         ps = rand(d, 2)
         @test typeof(ps) == Vector{typeof(p)}
         @test length(ps) == 2
-        @test is_manifold_point(M, ps[1], true)
-        @test is_manifold_point(M, ps[2], true)
+        @test is_point(M, ps[1], true)
+        @test is_point(M, ps[2], true)
     end
 end

@@ -8,19 +8,29 @@ point ``p`` on a manifold ``M``.
 
     DiracDelta(M::Manifold, p)
 """
-struct DiracDelta{P,M<:Manifolds.Manifold} <: Manifolds.MPointDistribution{M}
+struct DiracDelta{P,M<:Manifolds.AbstractManifold} <: Manifolds.MPointDistribution{M}
     manifold::M
     point::P
 end
 
 Base.eltype(::Type{<:DiracDelta{T}}) where {T} = T
 
-function Base.rand(::AbstractRNG, s::Random.SamplerTrivial{<:DiracDelta})
-    d = s.self
-    return copy(d.point)
-end
+Base.rand(::AbstractRNG, d::DiracDelta) = copy(d.point)
 
-Distributions._rand!(::AbstractRNG, d::DiracDelta, q) = copyto!(q, d.point)
+Random.rand!(::AbstractRNG, d::DiracDelta, q::AbstractArray) = copyto!(q, d.point)
+function Random.rand!(::AbstractRNG, qs::AbstractVector{<:AbstractArray}, d::DiracDelta)
+    p = d.point
+    if all(i -> isdefined(qs, i), eachindex(qs))
+        for i in eachindex(qs)
+            copyto!(qs[i], p)
+        end
+    else
+        for i in eachindex(qs)
+            qs[i] = copy(p)
+        end
+    end
+    return qs
+end
 
 function Distributions.convolve(
     d1::D1, d2::D1
@@ -32,7 +42,7 @@ end
 
 function Distributions.insupport(d::DiracDelta, p)
     M = d.manifold
-    return Manifolds.is_manifold_point(M, p) && isapprox(M, p, d.point)
+    return Manifolds.is_point(M, p) && isapprox(M, p, d.point)
 end
 
 Statistics.mean(d::DiracDelta) = d.point
