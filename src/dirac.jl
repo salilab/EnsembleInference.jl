@@ -33,7 +33,7 @@ function Random.rand!(::AbstractRNG, qs::AbstractVector{<:AbstractArray}, d::Dir
 end
 
 function Distributions.convolve(
-    d1::D1, d2::D1
+    d1::D1, d2::D2
 ) where {P1,P2,G<:Manifolds.AbstractGroupManifold,D1<:DiracDelta{P1,G},D2<:DiracDelta{P2,G}}
     M = d1.manifold
     p = Manifolds.compose(M, d1.point, d2.point)
