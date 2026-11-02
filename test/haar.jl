@@ -20,10 +20,9 @@ using Distributions, LinearAlgebra, Manifolds, Random, Statistics, StatsBase, Te
     @testset "logpdf" begin
         p = randn(3)
         d = Haar(M, p)
-        p2 = Haar(M, p)
-        @inferred logpdf(d, p2)
-        @test isreal(logpdf(d, p2))
-        @test iszero(logpdf(d, p2))
+        @inferred logpdf(d, p)
+        @test isreal(logpdf(d, p))
+        @test iszero(logpdf(d, p))
     end
 
     @testset "insupport" begin
