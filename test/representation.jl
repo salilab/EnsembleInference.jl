@@ -41,16 +41,16 @@ function dmat(β, ℓ)
         [cosα sinα; -sinα cosα]
     elseif ℓ == 1
         [
-            (1 + cosβ)/2 sinβ/√2 (1 - cosβ)/2
-            -sinβ/√2 cosβ sinβ/√2
-            (1 - cosβ)/2 -sinβ/√2 (1 + cosβ)/2
+            (1 + cosβ) / 2 sinβ / √2 (1 - cosβ) / 2
+            -sinβ / √2 cosβ sinβ / √2
+            (1 - cosβ) / 2 -sinβ / √2 (1 + cosβ) / 2
         ]
     elseif ℓ == 3//2
         [
-            cosα^3 √3*sinα*cosα^2 √3*sinα^2*cosα sinα^3
-            -√3*sinα*cosα^2 cosα*(3cosα^2 - 2) -sinα*(3sinα^2 - 2) √3*sinα^2*cosα
-            √3*sinα^2*cosα sinα*(3sinα^2 - 2) cosα*(3cosα^2 - 2) √3*sinα*cosα^2
-            -sinα^3 √3*sinα^2*cosα -√3*sinα*cosα^2 cosα^3
+            cosα^3 √3 * sinα * cosα^2 √3 * sinα^2 * cosα sinα^3
+            -√3 * sinα * cosα^2 cosα * (3cosα^2 - 2) -sinα * (3sinα^2 - 2) √3 * sinα^2 * cosα
+            √3 * sinα^2 * cosα sinα * (3sinα^2 - 2) cosα * (3cosα^2 - 2) √3 * sinα * cosα^2
+            -sinα^3 √3 * sinα^2 * cosα -√3 * sinα * cosα^2 cosα^3
         ]
     else
         throw(DomainError(ℓ, "ℓ must be less than or equal to 3/2"))
