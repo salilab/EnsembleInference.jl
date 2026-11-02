@@ -16,9 +16,7 @@ struct Haar{P,M<:Manifolds.AbstractGroupManifold} <: Manifolds.MPointDistributio
 end
 
 function Distributions.logpdf(d::Haar, p)
-    T = real(
-        promote_type(Manifolds.number_eltype(p), Manifolds.number_eltype(d.point))
-    )
+    T = real(promote_type(Manifolds.number_eltype(p), Manifolds.number_eltype(d.point)))
     return zero(T)
 end
 
