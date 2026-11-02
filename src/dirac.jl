@@ -20,7 +20,7 @@ Base.rand(::AbstractRNG, d::DiracDelta) = copy(d.point)
 Random.rand!(::AbstractRNG, d::DiracDelta, q::AbstractArray) = copyto!(q, d.point)
 function Random.rand!(::AbstractRNG, qs::AbstractVector{<:AbstractArray}, d::DiracDelta)
     p = d.point
-    if all(i -> isdefined(qs, i), eachindex(qs))
+    if all(i -> isassigned(qs, i), eachindex(qs))
         for i in eachindex(qs)
             copyto!(qs[i], p)
         end

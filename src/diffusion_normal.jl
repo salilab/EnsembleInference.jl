@@ -91,7 +91,7 @@ function Distributions._rand!(rng::AbstractRNG, d::DiffusionNormal, q)
     return q
 end
 function Random.rand!(rng::AbstractRNG, qs::AbstractVector, d::DiffusionNormal)
-    if all(i -> isdefined(qs, i), eachindex(qs))
+    if all(i -> isassigned(qs, i), eachindex(qs))
         for i in eachindex(qs)
             rand!(rng, d, qs[i])
         end

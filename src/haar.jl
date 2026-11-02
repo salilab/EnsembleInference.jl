@@ -56,7 +56,7 @@ function Random.rand!(
     return q
 end
 function Random.rand!(rng::AbstractRNG, qs::AbstractVector{<:AbstractMatrix}, d::Haar)
-    if all(i -> isdefined(qs, i), eachindex(qs))
+    if all(i -> isassigned(qs, i), eachindex(qs))
         for i in eachindex(qs)
             rand!(rng, d, qs[i])
         end
